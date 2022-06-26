@@ -1,5 +1,14 @@
 var canvasWidth = 600;
+
 var canvasHeight = 400;
+
+var player;
+
+var playerYposition = 200;
+
+var fallSpeed = 0;
+
+var interval = setInterval(updateCanvas, 20);
 
 function starGame(){
     gameCanvas.start();
@@ -16,17 +25,39 @@ var gameCanvas={
     }
 }
 
-var player;
-
-var playerYposition = 200;
-
 function createPlayer(width, height, x){
-    this.width=width;
-    this.height=height;
-    this.x=x;
-    this.y=playerYposition;
+    this.width = width;
+    this.height= height;
+    this.x = x;
+    this.y = playerYposition;
 
-    ctx=gameCanvas.context;
-    ctx.fillStyle="blue";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    this.draw=function(){
+        ctx=gameCanvas.context;
+        ctx.fillStyle="blue";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    
+    
+    this.makeFall=function(){
+        this.y += fallSpeed;
+        fallSpeed += 0.1;
+        this.stopPlayer();
+    }
+    
+    this.stopPlayer=function(){
+        var ground = canvasHeight - this.height;
+        if (this.y > ground){
+            this.y = ground
+        }
+    } 
+    
 }
+
+function updateCanvas(){
+    ctx=gameCanvas.context;
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    player.makeFall();
+    player.draw();
+}
+
