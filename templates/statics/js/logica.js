@@ -10,6 +10,10 @@ var fallSpeed = 0;
 
 var interval = setInterval(updateCanvas, 20);
 
+var isJumping = false;
+
+var jumpSpeed = 0;
+
 function starGame(){
     gameCanvas.start();
     player=new createPlayer(30,30,10);
@@ -39,9 +43,11 @@ function createPlayer(width, height, x){
     
     
     this.makeFall=function(){
-        this.y += fallSpeed;
-        fallSpeed += 0.1;
-        this.stopPlayer();
+        if(!isJumping){
+            this.y += fallSpeed;
+            fallSpeed += 0.1;
+            this.stopPlayer();
+        }
     }
     
     this.stopPlayer=function(){
@@ -50,6 +56,13 @@ function createPlayer(width, height, x){
             this.y = ground
         }
     } 
+
+    this.jump = function() {
+        if (isJumping) {
+            this.y -= jumpSpeed;
+            jumpSpeed += 0.3;
+        }
+    }
     
 }
 
@@ -59,5 +72,17 @@ function updateCanvas(){
 
     player.makeFall();
     player.draw();
+    player.jump();
 }
 
+function resetJump() {
+    jumpSpeed = 0;
+    isJumping = false;
+}
+
+document.body.onkeyup = function(e) {
+    if (e.keyCode == 32) {
+        isJumping = true;
+        setTimeout(function() { resetJump(); }, 1000);
+    }
+}
