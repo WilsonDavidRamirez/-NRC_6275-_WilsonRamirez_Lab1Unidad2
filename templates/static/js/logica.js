@@ -16,10 +16,15 @@ var jumpSpeed = 0;
 
 var block;
 
+var score = 0;
+
+var scoreLabel;
+
 function starGame(){
     gameCanvas.start();
     player=new createPlayer(30,30,10);
     block = new createBlock();
+    scoreLabel = new createScoreLabel(10, 30);
 }
 
 var gameCanvas={
@@ -116,7 +121,21 @@ function detectCollision() {
     }
 }
 
+function createScoreLabel(x, y) {
+    this.score = 0;  
+    this.x = x;
+    this.y = y;
+    this.draw = function() {
+        ctx = gameCanvas.context;
+        ctx.font = "25px Marker Felt";
+        ctx.fillStyle = "black";
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
+
 function updateCanvas(){
+    detectCollision();
+
     ctx=gameCanvas.context;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -126,6 +145,9 @@ function updateCanvas(){
 
     block.draw();
     block.attackPlayer();
+
+    scoreLabel.text = "SCORE: " + score;
+    scoreLabel.draw();
 }
 
 function randomNumber(min, max) {
