@@ -9,6 +9,10 @@ app._static_folder = os.path.abspath("templates/static/")
 def principal():
     return  render_template('pantallaDeJuego.html');
 
+#@app.route('/Juego')
+#def Juego():
+    #return  render_template('pantallaDeJuego.html');
+
 if __name__ == '__main__':
     app.run(debug=True)
 

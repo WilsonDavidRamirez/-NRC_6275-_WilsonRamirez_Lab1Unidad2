@@ -14,9 +14,12 @@ var isJumping = false;
 
 var jumpSpeed = 0;
 
+var block;
+
 function starGame(){
     gameCanvas.start();
     player=new createPlayer(30,30,10);
+    block = new createBlock();
 }
 
 var gameCanvas={
@@ -66,6 +69,53 @@ function createPlayer(width, height, x){
     
 }
 
+function createBlock() {
+    var width = randomNumber(10, 50);
+    var height = randomNumber(10, 200);
+    var speed = randomNumber(2, 6);
+    
+    this.x = canvasWidth;
+    this.y = canvasHeight - height;
+    
+    this.draw = function() {
+        ctx = gameCanvas.context;
+        ctx.fillStyle = "green";
+        ctx.fillRect(this.x, this.y, width, height);
+    }
+    this.attackPlayer = function() {
+        this.x -= speed;
+        this.returnToAttackPosition();
+    }
+    this.returnToAttackPosition = function() {
+        if (this.x < 0) {
+            width = randomNumber(10, 50);
+            height = randomNumber(50, 200);
+            speed = randomNumber(4, 6);
+            this.y = canvasHeight - height;
+            this.x = canvasWidth;
+            // Increase your score if your block made it to the edge
+            score++;
+        }
+    }
+}
+
+function detectCollision() {
+    var playerLeft = player.x
+    var playerRight = player.x + player.width;
+    var blockLeft = block.x;
+    var blockRight = block.x + block.width;
+    
+    var playerBottom = player.y + player.height;
+    var blockTop = block.y;
+    
+    if (playerRight > blockLeft && 
+        playerLeft < blockLeft && 
+        playerBottom > blockTop) {
+        
+        gameCanvas.stop();
+    }
+}
+
 function updateCanvas(){
     ctx=gameCanvas.context;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -73,6 +123,13 @@ function updateCanvas(){
     player.makeFall();
     player.draw();
     player.jump();
+
+    block.draw();
+    block.attackPlayer();
+}
+
+function randomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 function resetJump() {
@@ -86,3 +143,5 @@ document.body.onkeyup = function(e) {
         setTimeout(function() { resetJump(); }, 1000);
     }
 }
+
+
