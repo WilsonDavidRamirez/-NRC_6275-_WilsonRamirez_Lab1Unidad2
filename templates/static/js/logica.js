@@ -1,72 +1,72 @@
-var canvasWidth = 600;
+var canvasWidth = 600;//variable para el ancho del lienzo/escenario
 
-var canvasHeight = 400;
+var canvasHeight = 400;//variable para el alto del lienzo/escenario
 
-var player;
+var player;//variable para crear al avatar/jugador
 
-var playerYposition = 200;
+var playerYposition = 200;//variable par la posicion vertical del jugador (la unica sujeta a cambios)
 
-var fallSpeed = 0;
+var fallSpeed = 0;//variable para el control de caida (descenso en Y)
 
 var interval = setInterval(updateCanvas, 20);
 
-var isJumping = false;
+var isJumping = false;//variable para el salto del jugador actualzible por teclado
 
-var jumpSpeed = 0;
+var jumpSpeed = 0;//variable para la velocidad de salto del jugador
 
-var block;
+var block;//variable para la creacion de bloques
 
-var score = 0;
+var score = 0; //variable para la etiqueta del puntaje
 
-var scoreLabel;
+var scoreLabel;//variable para la etiqueta del puntaje
 
-function starGame(){
-    gameCanvas.start();
-    player=new createPlayer(30,30,10);
-    block = new createBlock();
-    scoreLabel = new createScoreLabel(10, 30);
+function starGame(){//funcion que inicializa el juego en valores iniciales
+    gameCanvas.start();//variable que plasma el contenido en el html
+    player=new createPlayer(30,30,10);//variable para crear al avatar/jugador con ubicacion en el espacio
+    block = new createBlock();//variable para la creacion de bloques con un valor asignado por su funcion
+    scoreLabel = new createScoreLabel(10, 30);//variable para la creacion de bloques con un valor asignado por su funcion
 }
 
-var gameCanvas={
+var gameCanvas={//variable cuyo valor es una funcion para plasmar el contenido en el html
     canvas:document.createElement("canvas"),
     start: function(){
-        this.canvas.width=canvasWidth;
-        this.canvas.height=canvasHeight;
-        this.context=this.canvas.getContext("2d");
+        this.canvas.width=canvasWidth;//inicializar el ancho del escenario
+        this.canvas.height=canvasHeight;//inicializar el alto del escenario
+        this.context=this.canvas.getContext("2d");//escenario en 2d
         document.body.insertBefore(this.canvas,document.body.childNodes[0]);
     }
 }
 
-function createPlayer(width, height, x){
-    this.width = width;
-    this.height= height;
-    this.x = x;
-    this.y = playerYposition;
+function createPlayer(width, height, x){//funcion para la creacion del jugador con parametros
+    this.width = width;//pasar parametro a valor de la funcion
+    this.height= height;//pasar parametro a valor de la funcion
+    this.x = x;//pasar parametro a valor de la funcion
+    this.y = playerYposition;//obtener valor y de nuestra variable
 
-    this.draw=function(){
+    this.draw=function(){//funcion que plasma al jugador
         ctx=gameCanvas.context;
         ctx.fillStyle="blue";
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
     
     
-    this.makeFall=function(){
-        if(!isJumping){
-            this.y += fallSpeed;
-            fallSpeed += 0.1;
-            this.stopPlayer();
+    this.makeFall=function(){//funcion para la caida del juagador
+        if(!isJumping){//si no esta operativa la funcion de salto se ejecuta el conteido
+            this.y += fallSpeed;//definicion para la velocidad a la que cae el jugador
+            fallSpeed += 0.1;//definicion para la velocidad a la que cae el jugador
+            this.stopPlayer();//funcion para la colision del jugador contra el suelo
         }
     }
     
-    this.stopPlayer=function(){
-        var ground = canvasHeight - this.height;
-        if (this.y > ground){
+    this.stopPlayer=function(){//funcion para la colision del suelo
+        var ground = canvasHeight - this.height;// ubicacio del suelo 
+        if (this.y > ground){//if para frenar al jugador al llegar a colisionar con el suelo
             this.y = ground
         }
     } 
 
-    this.jump = function() {
-        if (isJumping) {
+    this.jump = function() {//funcion para la velocidad de salto del jugador
+        if (isJumping) {// verificacion del valor de variable
             this.y -= jumpSpeed;
             jumpSpeed += 0.3;
         }
@@ -74,11 +74,10 @@ function createPlayer(width, height, x){
     
 }
 
-function createBlock() {
-    var width = randomNumber(10, 50);
-    var height = randomNumber(10, 200);
-    var speed = randomNumber(2, 6);
-    
+function createBlock() {//funcion para la creacion de bloques
+    var width = randomNumber(10, 50);//ancho aleatorio del obstaculo
+    var height = randomNumber(10, 200);//alto ancho aleatorio del obstaculo
+    var speed = randomNumber(2, 6);//velocidad aleatoria del obstaculo
     this.x = canvasWidth;
     this.y = canvasHeight - height;
     
@@ -98,7 +97,7 @@ function createBlock() {
             speed = randomNumber(4, 6);
             this.y = canvasHeight - height;
             this.x = canvasWidth;
-            // Increase your score if your block made it to the edge
+            
             score++;
         }
     }
@@ -121,7 +120,7 @@ function detectCollision() {
     }
 }
 
-function createScoreLabel(x, y) {
+function createScoreLabel(x, y) {//funcion para editar la etiqueta
     this.score = 0;  
     this.x = x;
     this.y = y;
@@ -133,7 +132,7 @@ function createScoreLabel(x, y) {
     }
 }
 
-function updateCanvas(){
+function updateCanvas(){//funcion para resetear el juego
     detectCollision();
 
     ctx=gameCanvas.context;
@@ -150,18 +149,18 @@ function updateCanvas(){
     scoreLabel.draw();
 }
 
-function randomNumber(min, max) {
+function randomNumber(min, max) {//funcion para numeros random
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function resetJump() {
+function resetJump() {//resio de variables, evita el salto infinito
     jumpSpeed = 0;
     isJumping = false;
 }
 
-document.body.onkeyup = function(e) {
-    if (e.keyCode == 32) {
-        isJumping = true;
+document.body.onkeyup = function(e) { //funcionamiento de acciones por medio del teclado
+    if (e.keyCode == 32) {//barra espacidora
+        isJumping = true;//cambio de valor de variable al presionar una tecla
         setTimeout(function() { resetJump(); }, 1000);
     }
 }
