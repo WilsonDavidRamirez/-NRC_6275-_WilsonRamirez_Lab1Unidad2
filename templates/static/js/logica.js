@@ -49,7 +49,6 @@ function createPlayer(width, height, x){//funcion para la creacion del jugador c
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
     
-    
     this.makeFall=function(){//funcion para la caida del juagador
         if(!isJumping){//si no esta operativa la funcion de salto se ejecuta el conteido
             this.y += fallSpeed;//definicion para la velocidad a la que cae el jugador
@@ -75,29 +74,29 @@ function createPlayer(width, height, x){//funcion para la creacion del jugador c
 }
 
 function createBlock() {//funcion para la creacion de bloques
-    var width = randomNumber(10, 50);//ancho aleatorio del obstaculo
-    var height = randomNumber(10, 200);//alto ancho aleatorio del obstaculo
-    var speed = randomNumber(2, 6);//velocidad aleatoria del obstaculo
+    var width = randomNumber(10, 50);//variable ancho aleatorio del obstaculo
+    var height = randomNumber(10, 200);//variable alto ancho aleatorio del obstaculo
+    var speed = randomNumber(2, 6);//variable velocidad aleatoria del obstaculo
     this.x = canvasWidth;
     this.y = canvasHeight - height;
     
-    this.draw = function() {
+    this.draw = function() {//funcion para asignar caracteristicas del bloque
         ctx = gameCanvas.context;
         ctx.fillStyle = "green";
         ctx.fillRect(this.x, this.y, width, height);
     }
-    this.attackPlayer = function() {
-        this.x -= speed;
+    this.attackPlayer = function() {//funcion par simular el acercamiento al jugador
+        this.x -= speed;//reduccion del valor en el eje x
         this.returnToAttackPosition();
     }
+    //funcion para reiniciar los valores de distancia del bloque
     this.returnToAttackPosition = function() {
         if (this.x < 0) {
-            width = randomNumber(10, 50);
-            height = randomNumber(50, 200);
-            speed = randomNumber(4, 6);
+            width = randomNumber(10, 50);//ancho del bloque
+            height = randomNumber(50, 200);//alto del bloque
+            speed = randomNumber(4, 6);//velocidad del bloque
             this.y = canvasHeight - height;
             this.x = canvasWidth;
-            
             score++;
         }
     }
@@ -126,9 +125,9 @@ function createScoreLabel(x, y) {//funcion para editar la etiqueta
     this.y = y;
     this.draw = function() {
         ctx = gameCanvas.context;
-        ctx.font = "25px Marker Felt";
-        ctx.fillStyle = "black";
-        ctx.fillText(this.text, this.x, this.y);
+        ctx.font = "25px Marker Felt";//fuente de letra
+        ctx.fillStyle = "black";//color de letra
+        ctx.fillText(this.text, this.x, this.y);//posicion de la etiqueta
     }
 }
 
